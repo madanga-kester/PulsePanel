@@ -21,17 +21,16 @@ Pulse Panel is a C#/.NET system designed for **e-commerce platforms** to track u
   Modular system that can plug into existing e-commerce websites or apps.
 
   ##  Project Structure
-
-- **PulsePanel (F# project)** – API and controllers  
-- **PulsePanel.AppHost (C# project)** – Application entry point  
-- **PulsePanel.ServiceDefaults** – Shared defaults for services  
+  **PulsePanel (F# project)** – API and controllers  
+ **PulsePanel.AppHost (C# project)** – Application entry point  
+ **PulsePanel.ServiceDefaults** – Shared defaults for services  
 
 ### Implemented Models
-- `ClickEvent.cs` → Captures user click data  
-  - Properties: `ElementId`, `PageUrl`, `Timestamp`, `UserId`  
-  - Methods:  
-    - `IsRecent(int seconds)` → Checks if the click happened recently  
-    - `ToString()` → Returns a readable representation  
+ `ClickEvent.cs` → Captures user click data  
+   Properties: `ElementId`, `PageUrl`, `Timestamp`, `UserId`  
+   Methods:  
+    `IsRecent(int seconds)` → Checks if the click happened recently  
+    `ToString()` → Returns a readable representation  
 
 ---
 
