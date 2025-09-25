@@ -6,14 +6,23 @@ namespace PulsePanel.Models
     {
         [Key]
         public int Id { get; set; }                // Unique identifier for each click event
+
+        [Required]
         public string ElementId { get; set; }      // Taking which button or link was clicked
+
         public DateTime Timestamp { get; set; }    // showing  When it happened
+
+        [Url]
         public string PageUrl { get; set; }        // Where the click happened
+
+        [Required]
         public string UserId { get; set; }         // to identify  the user session
         public string SessionId { get; set; }      // Session identifier
 
         public string IpAddress { get; set; }      // User's IP
         public string UserDevice { get; set; }      // Browser/device info
+
+        [Url]
         public string PreviousPageUrl { get; set; }    // Previous page
 
 
