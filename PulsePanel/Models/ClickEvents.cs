@@ -109,8 +109,15 @@ public class ClickEventManager
 {
     lock (_lock)
     {
-        return 
-    }
+        return _clickHistory.Count(c => c.UserId == userId);
+            }
 }
+
+
+
+        //Geting clicks that happened on a specific page
+        // Get most clicked elements (analytics)
+        // Remove old clicks older than n days
+        // Get all unique users that clicked a page or a button
     }
 }
