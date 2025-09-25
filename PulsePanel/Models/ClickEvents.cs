@@ -61,11 +61,13 @@ namespace PulsePanel.Models
 
 
 
+   
+    
+    
+    
     // ClickEventManager class for managing and storing   multiple clicks
 
-
-
-    public class ClickEventManager
+public class ClickEventManager
         {
             private readonly List<ClickEvents> _clickHistory = new List<ClickEvents>();
             private readonly object _lock = new ();
@@ -81,7 +83,7 @@ namespace PulsePanel.Models
         }
 
         // Getting all clicks for a given user
-        public List<ClickEvents> GetUserClicks(string userId)
+        public List<ClickEvents> UserClicks(string userId)
         {
             lock (_lock)
 
@@ -92,7 +94,7 @@ namespace PulsePanel.Models
         }
         // Get all strored clicks
 
-        public List<ClickEvents> GetAllClicks()
+        public List<ClickEvents> AllClicks()
 
             {
             lock (_lock)
@@ -101,5 +103,14 @@ namespace PulsePanel.Models
             }
 
         }
+
+        //Counting the total clicks a user made
+        public int SpecificUserClickCount(string userId)
+{
+    lock (_lock)
+    {
+        return 
+    }
+}
     }
 }
