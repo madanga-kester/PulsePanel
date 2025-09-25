@@ -1,12 +1,16 @@
-﻿namespace PulsePanel.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PulsePanel.Models
 {
     public class ClickEvents
     {
-
+        [Key]
+        public int Id { get; set; }                // Unique identifier for each click event
         public string ElementId { get; set; }      // Taking which button or link was clicked
         public DateTime Timestamp { get; set; }    // showing  When it happened
         public string PageUrl { get; set; }        // Where the click happened
         public string UserId { get; set; }         // to identify  the user session
+        public string SessionId { get; set; }      // Session identifier
 
         public string IpAddress { get; set; }      // User's IP
         public string UserDevice { get; set; }      // Browser/device info
@@ -43,26 +47,49 @@
         {
             return $"[ClickEvents] ElementId: {ElementId}, PageUrl: {PageUrl}, UserId: {UserId}, Timestamp: {Timestamp}, IpAddress: {IpAddress}, UserDevice: {UserDevice}, PreviousPageUrl: {PreviousPageUrl}";
         }
+    }
 
 
-        //  storing   multiple clicks
-        public class ClickEventManager
+
+
+    // ClickEventManager class for managing and storing   multiple clicks
+
+
+
+    public class ClickEventManager
         {
-            private List<ClickEvents> _clickHistory = new List<ClickEvents>();
-
-            // Adding a new click event
-            public void AddClick(string elementId, string pageUrl, string userId, string IpAddress, string UserDevice, string PreviousPageUrl)
+            private readonly List<ClickEvents> _clickHistory = new List<ClickEvents>();
+            private readonly object _lock = new ();
+        // Adding a new click event
+        public void AddClick(string elementId, string pageUrl, string userId, string IpAddress, string UserDevice, string PreviousPageUrl)
             {
+                //constructor call 
                 var click = new ClickEvents(elementId, pageUrl, userId, IpAddress, UserDevice, UserDevice);
+            lock (_lock)
+            {
                 _clickHistory.Add(click);
             }
+        }
 
-            // Getting all clicks for a given user
-            public List<ClickEvents> GetUserClicks(string userId)
+        // Getting all clicks for a given user
+        public List<ClickEvents> GetUserClicks(string userId)
+        {
+            lock (_lock)
+
+
             {
-                return
+                return _clickHistory.FindAll(c => c.UserId == userId);
             }
+        }
+        // Get all strored clicks
 
+        public List<ClickEvents> GetAllClicks()
+
+            {
+            lock (_lock)
+            {
+                return _clickHistory.ToList();
+            }
 
         }
     }
