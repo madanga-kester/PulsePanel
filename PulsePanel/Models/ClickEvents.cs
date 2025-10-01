@@ -19,7 +19,7 @@ namespace PulsePanel.Models
         public string UserId { get; set; }         // to identify  the user session
         public string SessionId { get; set; }      // Session identifier
 
-        public string IpAddress { get; set; }      // User's IP
+        public string IpAddress { get; set; }      // User's IPa
         public string UserDevice { get; set; }      // Browser/device info
 
         [Url]
@@ -65,16 +65,22 @@ namespace PulsePanel.Models
     
     
     
-    // ClickEventManager class for managing and storing   multiple clicks
+    // ClickEventManager class for managing and storing the  multiple clicks
 
 public class ClickEventManager
         {
             private readonly List<ClickEvents> _clickHistory = new List<ClickEvents>();
             private readonly object _lock = new ();
+
+
+
         // Adding a new click event
         public void AddClick(string elementId, string pageUrl, string userId, string IpAddress, string UserDevice, string PreviousPageUrl)
             {
-                //constructor call 
+               
+            
+            
+     //constructor call 
                 var click = new ClickEvents(elementId, pageUrl, userId, IpAddress, UserDevice, UserDevice);
             lock (_lock)
             {
@@ -82,7 +88,8 @@ public class ClickEventManager
             }
         }
 
-        // Getting all clicks for a given user
+      
+       // Getting all clicks for a given user
         public List<ClickEvents> UserClicks(string userId)
         {
             lock (_lock)
@@ -92,6 +99,7 @@ public class ClickEventManager
                 return _clickHistory.FindAll(c => c.UserId == userId);
             }
         }
+       
         // Get all strored clicks
 
         public List<ClickEvents> AllClicks()
@@ -110,13 +118,39 @@ public class ClickEventManager
     lock (_lock)
     {
         return _clickHistory.Count(c => c.UserId == userId);
-            }
-}
+    }
+      }
 
 
 
         //Geting clicks that happened on a specific page
+        public List<ClickEvents> PageClicks(string pageUrl)
+        {
+            lock (_lock)
+            {
+                return _clickHistory.FindAll(c => c.PageUrl == pageUrl);
+            }
+        }
+
+
+
+
+
         // Get most clicked elements (analytics)
+        public List<string> MostClickedElements(int topN)
+        {
+            lock (_lock)
+            {
+                return _clickHistory
+                    .GroupBy(c => c.ElementId)
+                    .OrderByDescending(g => g.Count())
+                    .Take(topN)
+                    .Select(g => g.Key)
+                    .ToList();
+            }
+        }
+
+
         // Remove old clicks older than n days
         // Get all unique users that clicked a page or a button
     }
