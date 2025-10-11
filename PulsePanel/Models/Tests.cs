@@ -1,65 +1,50 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace PulsePanel.Models
+﻿
+
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
+namespace PetAdoptionSystem.Models
 {
-    public class Students
+    class PetAdoption
     {
         [Key]
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Fullname => $" {FirstName} {SecondName} ";
-        public int StudentId { get; set; }
-        public int Age { get; set; }
+        [Required]
+        public string PetName { get; set; }
+        [Required]
+        public string PetAdopter { get; set; }
+        [Required]
+        public DateTime AdoptionDate { get; set; }
+        public string PetType { get; set; }
 
-        public Students()
-        { }
 
-        public Students(string aFirstName, string aSecondName, int aStudentId, int aAge)
+
+
+        public PetAdoption() { }
+
+        public PetAdoption(int aId, string aPetName, string aPetAdopter, string aPetType)
         {
-
-            FirstName = aFirstName;
-            SecondName = aSecondName;
-            StudentId = aStudentId;
-            Age = aAge;
+            Id = aId;
+            PetName = aPetName;
+            PetAdopter = aPetAdopter;
+            PetType = aPetType;
+            AdoptionDate = DateTime.UtcNow;
 
         }
 
-
-        public static Students CreateNewstudent(string aFirstName, string aSecondName, int aStudentId, int aAge)
+        public override string ToString()
         {
-            return new Students(aFirstName, aSecondName, aStudentId, aAge);
+            return $"[PetAdoption] Id:{Id}, PetName:{PetName},PetAdopter:{PetAdopter}, PetType:{PetType}, AdoptionDate: {AdoptionDate} ";
         }
-    }
 
 
 
+        // methods
 
-    class program
-    {
-
-        static void Main(string[] args)
+        public bool TimeOfAdoption(int Seconds)
         {
-            Students Student1 = new Students("Kester", "Madanga", 4323, 20);
 
-            Console.WriteLine($" The student is: {Student1.Fullname}, Id: {Student1.StudentId}, Age: {Student1.Age}");
-
-
+          return( DateTime.UtcNow-AdoptionDate).TotalSeconds <= Seconds;
         }
+
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

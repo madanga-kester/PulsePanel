@@ -27,6 +27,9 @@ namespace PulsePanel.Models
 
 
 
+        // Parameterless constructor for EF Core
+        public ClickEvents() { }
+
 
 
         public ClickEvents(string aElementId, string aPageUrl, string aUserId, string aIpAddress, string aUserDevice, string aPreviousPageUrl)
@@ -43,7 +46,8 @@ namespace PulsePanel.Models
 
         }
 
-        //methods
+        //methods  
+
         //checking whether the click happened withing the last seconds
 
 
@@ -61,35 +65,35 @@ namespace PulsePanel.Models
 
 
 
-   
-    
-    
-    
+
+
+
+
     // ClickEventManager class for managing and storing the  multiple clicks
 
-public class ClickEventManager
-        {
-            private readonly List<ClickEvents> _clickHistory = new List<ClickEvents>();
-            private readonly object _lock = new ();
+    public class ClickEventManager
+    {
+        private readonly List<ClickEvents> _clickHistory = new List<ClickEvents>();
+        private readonly object _lock = new();
 
 
 
         // Adding a new click event
         public void AddClick(string elementId, string pageUrl, string userId, string IpAddress, string UserDevice, string PreviousPageUrl)
-            {
-               
-            
-            
-     //constructor call 
-                var click = new ClickEvents(elementId, pageUrl, userId, IpAddress, UserDevice, UserDevice);
+        {
+
+
+
+            //constructor call 
+            var click = new ClickEvents(elementId, pageUrl, userId, IpAddress, UserDevice, UserDevice);
             lock (_lock)
             {
                 _clickHistory.Add(click);
             }
         }
 
-      
-       // Getting all clicks for a given user
+
+        // Getting all clicks for a given user
         public List<ClickEvents> UserClicks(string userId)
         {
             lock (_lock)
@@ -99,12 +103,12 @@ public class ClickEventManager
                 return _clickHistory.FindAll(c => c.UserId == userId);
             }
         }
-       
+
         // Get all strored clicks
 
         public List<ClickEvents> AllClicks()
 
-            {
+        {
             lock (_lock)
             {
                 return _clickHistory.ToList();
@@ -114,12 +118,12 @@ public class ClickEventManager
 
         //Counting the total clicks a user made
         public int SpecificUserClickCount(string userId)
-{
-    lock (_lock)
-    {
-        return _clickHistory.Count(c => c.UserId == userId);
-    }
-      }
+        {
+            lock (_lock)
+            {
+                return _clickHistory.Count(c => c.UserId == userId);
+            }
+        }
 
 
 
@@ -152,6 +156,26 @@ public class ClickEventManager
 
 
         // Remove old clicks older than n days
+        public List<string> DeleteOldClicks(int Ndays)
+        {
+            lock (_lock)
+            {
+                {
+                    DateTime threshold = DateTime.UtcNow.AddDays(-Ndays);
+
+                    var oldClicks = _clickHistory.Where(c => c.Timestamp < threshold).ToList();
+                    _clickHistory.RemoveAll(c => c.Timestamp < threshold);
+
+                    return oldClicks.Select(c => c.UserId).Distinct().ToList();
+                }
+            }
+        }
         // Get all unique users that clicked a page or a button
+        public void DeleteAllClicks()
+        {
+            _clickHistory.Clear();
+
+        }
+
     }
 }
