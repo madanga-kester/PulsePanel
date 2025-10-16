@@ -1,11 +1,14 @@
 ﻿namespace PulsePanel.Models
 {
-    // ClickEventManager class for managing and storing multiple clicks
+    // Click Event Manager class for managing and storing multiple clicks
     public class ClickEventManager
     {
         private readonly List<ClickEvents> _clickHistory = new List<ClickEvents>();
-        private readonly object _lock = new();
 
+
+        private readonly object _lock = new();// preventing race/ data corruption if multiple users click things at the same time.
+
+        // Adding a new click event 
         public void AddClick(string elementId, string pageUrl, string userId, string IpAddress, string UserDevice, string PreviousPageUrl)
         {
             var click = new ClickEvents(elementId, pageUrl, userId, IpAddress, UserDevice, PreviousPageUrl);
@@ -15,6 +18,7 @@
             }
         }
 
+        // gett all clicks for a given user
         public List<ClickEvents> UserClicks(string userId)
         {
             lock (_lock)
@@ -22,6 +26,8 @@
                 return _clickHistory.FindAll(c => c.UserId == userId);
             }
         }
+
+        //Get all stored clicks
 
         public List<ClickEvents> AllClicks()
         {
@@ -31,6 +37,7 @@
             }
         }
 
+        // count the total clicks a user made 
         public int SpecificUserClickCount(string userId)
         {
             lock (_lock)
@@ -39,6 +46,8 @@
             }
         }
 
+
+        // getting clicks that happened on a specific page
         public List<ClickEvents> PageClicks(string pageUrl)
         {
             lock (_lock)
@@ -47,6 +56,8 @@
             }
         }
 
+
+        // get most clicked elements
         public List<string> MostClickedElements(int topN)
         {
             lock (_lock)
@@ -60,6 +71,8 @@
             }
         }
 
+
+        // rmoving clicks that are older than N days
         public List<string> DeleteOldClicks(int Ndays)
         {
             lock (_lock)
@@ -75,5 +88,7 @@
         {
             _clickHistory.Clear();
         }
+
+
     }
 }

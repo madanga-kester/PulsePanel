@@ -2,10 +2,10 @@
 
 namespace PulsePanel.Models
 {
-    public class ClickEvents
+    public class ClickEvents: BaseEntity
     {
         [Key]
-        public int Id { get; set; }                // Unique identifier for each click event
+                      
 
         [Required]
         public string ElementId { get; set; }      // Taking which button or link was clicked
